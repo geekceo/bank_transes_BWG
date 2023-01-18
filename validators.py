@@ -2,15 +2,15 @@ import alchemy
 from schemas import Transaction
 from config import Statuses
 
-def validate_transaction(transaction: Transaction, uname: str, amount: str, withdrawal: bool = False):
+def validate_transaction(uname: str, amount: str, withdrawal: bool = False, transaction: Transaction = None):
     u_balance = alchemy.get_user_balance(uname)
     
-    status = Statuses.NEW if u_balance >= amount else Statuses.DECLINED
+    status = Statuses.SUCCESSED if u_balance >= amount else Statuses.DECLINED
     
     alchemy.save_transaction(
-        u_from=transaction.u_from,
+        u_from=uname,
         u_to=transaction.u_to if not withdrawal else 'withdrawal',
-        amount=transaction.amount,
+        amount=amount,
         status=status
     )
     

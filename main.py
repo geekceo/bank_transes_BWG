@@ -1,9 +1,10 @@
 from fastapi import FastAPI, Query, Body
-from schemas import User, Transaction, TransactionOut
+from schemas import User, Transaction
 import alchemy
 import validators
 import config
 from config import Statuses
+import tasks
 
 app = FastAPI()
 
@@ -28,23 +29,18 @@ def set_user(user: User=Body(embed=True)):
 '''Path to create new trasaction'''
 @app.post(config.USER_TRANSACTION_PATH)
 def transaction_send(transaction: Transaction=Body(embed=True)):
-    status = validators.validate_transaction(
+    validators.validate_transaction(
         transaction=transaction,
         uname=transaction.u_from,
         amount=transaction.amount
         )
          
-    return TransactionOut(**transaction.dict(), status=status)
+    return Transaction(**transaction.dict())
 
 
 '''Path to make withdrawal'''
 @app.post(config.USER_WITHDRAWAL)
 def transaction_withdrawal(transaction: Transaction=Body(embed=True)):
-    status = validators.validate_transaction(
-        transaction=transaction,
-        uname=transaction.u_from,
-        amount=transaction.amount,
-        withdrawal=True
-        )
+    tasks.create_task(pool='', task=f'{transaction.u_from}:{transaction.amount}', queue=transaction.u_from)
     
-    return TransactionOut(**transaction.dict(), status=status)
+    return Transaction(**transaction.dict())

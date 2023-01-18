@@ -4,6 +4,14 @@ from sql_schemas import users, transactions
 
 engine = sqla.create_engine(config.PG)
 
+def get_users_list():
+    connection = engine.connect()
+    query = sqla.select([users.columns.u_name])
+
+    result = connection.execute(query).fetchall()
+    
+    return [elem[0] for elem in result]
+
 def create_user(uname: str, balance: int):
     connection = engine.connect()
     query = users.insert().values(
