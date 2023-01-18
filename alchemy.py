@@ -46,6 +46,6 @@ def save_transaction(u_from: str, u_to: str, amount: int, status: str):
 
 def update_balance(uname: str, new_balance: str):
     connection = engine.connect()
-    query = sqla.update(users).where(users.columns.name == uname).values(u_balance = new_balance)
+    query = sqla.update(users).where(users.columns.u_name == uname).values(u_balance = new_balance)
     
     connection.execute(query)

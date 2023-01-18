@@ -9,7 +9,7 @@ class User(BaseModel):
 class Transaction(BaseModel):
     
     u_from: str = Field(...)
-    u_to: str = Field(...)
+    u_to: str = Field(default='withdrawal')
     amount: int = Field(...)
     
 
