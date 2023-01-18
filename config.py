@@ -1,14 +1,19 @@
 import os
+from dataclasses import dataclass
 
+PG_USER = os.getenv('PG_USER')
+PG_PASS = os.getenv('PG_PASS')
+PG_DB = os.getenv('PG_DB')
 
-DATABASE = {
-    'drivername': 'postgresql',
-    'host': '127.0.0.1',
-    'port': '6233',
-    'username': os.getenv('PG_USER'),
-    'password': os.getenv('PG_PASS'),
-    'database': os.getenv('PG_DB')
-}
+PG = 'postgresql://postgres:pgidgaf@127.0.0.1:6233/bank_transes'
+
+@dataclass
+class Statuses:
+    NEW: str = 'New'
+    PROCCESSED: str = 'In process'
+    SUCCESSED: str = 'Success'
+    DECLINED: str = 'Decline'
+    
 
 API_PATH = '/api/v1'
 

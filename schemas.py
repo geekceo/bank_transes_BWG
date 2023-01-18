@@ -11,4 +11,7 @@ class Transaction(BaseModel):
     u_from: str = Field(...)
     u_to: str = Field(...)
     amount: int = Field(...)
-    status: str = Field(default='New')
+    
+
+class TransactionOut(Transaction):
+    status: str
