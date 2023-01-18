@@ -3,14 +3,18 @@ import validators
 import alchemy
 import time
 
-def work(pool, queue):
-    task = get_task(pool, queue)
+def work(queue):
+    task = get_task(queue)
     
+    '''If task not exist then sleeping for time before check another one queue'''
     if not task:
         return time.sleep(1)
     
+    '''Divide byte string from queue by two parts - username and amount of transaction'''
+    '''Then put 2 parts in 2 vars via tuple'''
     uname, amount = tuple(task.decode('utf-8').split(':'))
 
+    '''velidating transaction with next saving in database'''
     validators.validate_transaction(
         uname=uname,
         amount=int(amount),
@@ -26,7 +30,8 @@ def main():
         users = alchemy.get_users_list()
         
         for user in users:
-            work(pool='', queue=user)
+            '''Send new user-queue to handle'''
+            work(queue=user)
 
 
 if __name__ == '__main__':

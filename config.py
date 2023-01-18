@@ -1,10 +1,12 @@
 import os
 from dataclasses import dataclass
 
+'''Need to hide private keys, but sqlalchemy engine doesn't take formated strings'''
 PG_USER = os.getenv('PG_USER')
 PG_PASS = os.getenv('PG_PASS')
 PG_DB = os.getenv('PG_DB')
 
+'''Then I do this beautiful and VERY safety thing...'''
 PG = 'postgresql://postgres:pgidgaf@127.0.0.1:6233/postgres'
 
 @dataclass

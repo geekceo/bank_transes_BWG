@@ -8,6 +8,8 @@ import tasks
 
 app = FastAPI()
 
+'''Without queue path'''
+
 '''Path to get user info via user name'''
 @app.get(config.USER_INFO_PATH)
 def get_user(uname: str=Query(default=None)):
@@ -38,9 +40,13 @@ def transaction_send(transaction: Transaction=Body(embed=True)):
     return Transaction(**transaction.dict())
 
 
+'''With queue path'''
+
 '''Path to make withdrawal'''
 @app.post(config.USER_WITHDRAWAL)
 def transaction_withdrawal(transaction: Transaction=Body(embed=True)):
-    tasks.create_task(pool='', task=f'{transaction.u_from}:{transaction.amount}', queue=transaction.u_from)
+    '''Put new task in queue but firstly send json then work started'''
+    
+    tasks.create_task(task=f'{transaction.u_from}:{transaction.amount}', queue=transaction.u_from)
     
     return Transaction(**transaction.dict())
